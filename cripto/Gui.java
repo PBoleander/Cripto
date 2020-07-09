@@ -73,7 +73,7 @@ class Gui extends JPanel implements ActionListener {
 
     private void configurarPass() {
         JLabel passLabel = new JLabel("Contraseña:");
-        txtPassword.setPreferredSize(new Dimension(150, 20));
+        txtPassword.setPreferredSize(new Dimension(200, 20));
         GridBagConstraints txtPassC = new GridBagConstraints();
 
         txtPassC.weightx = 1.0;
@@ -91,12 +91,16 @@ class Gui extends JPanel implements ActionListener {
 
         txtSalida.setEditable(false);
 
+        Font fuente = new Font(Font.MONOSPACED, Font.PLAIN, 13);
+        txtEntrada.setFont(fuente);
+        txtSalida.setFont(fuente);
+
         txtEntrada.setLineWrap(true);
         txtEntrada.setWrapStyleWord(true);
         txtSalida.setLineWrap(true);
         txtSalida.setWrapStyleWord(true);
 
-        Dimension dimTxt = new Dimension(240, 300);
+        Dimension dimTxt = new Dimension(280, 300);
         JScrollPane scrollEntrada = new JScrollPane(txtEntrada);
         JScrollPane scrollSalida = new JScrollPane(txtSalida);
         scrollEntrada.setPreferredSize(dimTxt);
