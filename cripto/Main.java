@@ -32,8 +32,7 @@ class Main extends JFrame {
         // Centra la ventana sabiendo su tamaño
         int anchuraVentana = this.getWidth();
         int alturaVentana = this.getHeight();
-        this.setBounds((anchuraPantalla - anchuraVentana) / 2, (alturaPantalla - alturaVentana) / 2,
-                anchuraVentana, alturaVentana);
+        this.setLocation((anchuraPantalla - anchuraVentana) / 2, (alturaPantalla - alturaVentana) / 2);
     }
 
     public static void main(String[] args) {
