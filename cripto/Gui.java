@@ -4,13 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 class Gui extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
     private final Criptador criptador;
-    private final JButton btnDescifrar, btnEncriptar, btnLimpiarEntrada, btnLimpiarSalida;
+    private final JButton btnCargarArchivo, btnDescifrar, btnEncriptar, btnLimpiarEntrada, btnLimpiarSalida;
+    private final JFileChooser archivoLectura;
     private final JPanel panelBotones, panelPass, panelTextsAreas;
     private final JPasswordField txtPassword;
     private final JTextArea txtEntrada, txtSalida;
@@ -18,7 +23,9 @@ class Gui extends JPanel implements ActionListener {
     Gui() {
         super(new GridBagLayout());
         this.criptador = new Criptador();
+        this.archivoLectura = new JFileChooser();
 
+        this.btnCargarArchivo = new JButton("Leer archivo");
         this.btnDescifrar = new JButton("Descifrar");
         this.btnEncriptar = new JButton("Encriptar");
         this.btnLimpiarEntrada = new JButton("Limpiar");
@@ -52,7 +59,29 @@ class Gui extends JPanel implements ActionListener {
             txtEntrada.requestFocus();
         } else if (o.equals(btnLimpiarSalida)) { // BOTÓN LIMPIAR SALIDA
             txtSalida.setText("");
+        } else if (o.equals(btnCargarArchivo)) { // BOTÓN CARGAR ARCHIVO
+            if (archivoLectura.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    cargarArchivo(archivoLectura.getSelectedFile());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
         }
+    }
+
+    private void cargarArchivo(File archivo) throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader(archivo));
+        StringBuilder sb = new StringBuilder();
+        String linea;
+
+        while ((linea = br.readLine()) != null) {
+            sb.append(linea).append(System.lineSeparator());
+        }
+        br.close();
+
+        txtEntrada.setText(sb.toString());
     }
 
     private void configurarBotones() {
@@ -106,12 +135,23 @@ class Gui extends JPanel implements ActionListener {
         scrollEntrada.setPreferredSize(dimTxt);
         scrollSalida.setPreferredSize(dimTxt);
 
+        btnCargarArchivo.addActionListener(this);
         btnLimpiarEntrada.addActionListener(this);
         btnLimpiarSalida.addActionListener(this);
 
         Dimension dimBotones = new Dimension(100, 30);
+        btnCargarArchivo.setPreferredSize(new Dimension(130, 30));
         btnLimpiarEntrada.setPreferredSize(dimBotones);
         btnLimpiarSalida.setPreferredSize(dimBotones);
+
+        archivoLectura.setFileHidingEnabled(false);
+
+        JPanel btnsEntradaPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints btnsPanelC = new GridBagConstraints();
+        btnsPanelC.insets = new Insets(0, 10, 0, 10);
+        btnsEntradaPanel.add(btnCargarArchivo, btnsPanelC);
+        btnsPanelC.gridx = 1;
+        btnsEntradaPanel.add(btnLimpiarEntrada, btnsPanelC);
 
         GridBagConstraints txtC = new GridBagConstraints();
         txtC.insets = new Insets(0, 5, 0, 5);
@@ -128,7 +168,7 @@ class Gui extends JPanel implements ActionListener {
         txtC.gridx = 0;
         txtC.gridy = 2;
         txtC.insets = new Insets(10, 0, 10, 0);
-        panelTextsAreas.add(btnLimpiarEntrada, txtC);
+        panelTextsAreas.add(btnsEntradaPanel, txtC);
         txtC.gridx = 1;
         panelTextsAreas.add(btnLimpiarSalida, txtC);
     }
