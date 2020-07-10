@@ -4,18 +4,15 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 class Gui extends JPanel implements ActionListener {
 
     private static final long serialVersionUID = 1L;
 
     private final Criptador criptador;
-    private final JButton btnCargarArchivo, btnDescifrar, btnEncriptar, btnLimpiarEntrada, btnLimpiarSalida;
-    private final JFileChooser archivoLectura;
+    private final JButton btnCargar, btnDescifrar, btnEncriptar, btnGuardar, btnLimpiarEntrada, btnLimpiarSalida;
+    private final JFileChooser fileChooser;
     private final JPanel panelBotones, panelPass, panelTextsAreas;
     private final JPasswordField txtPassword;
     private final JTextArea txtEntrada, txtSalida;
@@ -23,11 +20,12 @@ class Gui extends JPanel implements ActionListener {
     Gui() {
         super(new GridBagLayout());
         this.criptador = new Criptador();
-        this.archivoLectura = new JFileChooser();
+        this.fileChooser = new JFileChooser();
 
-        this.btnCargarArchivo = new JButton("Leer archivo");
+        this.btnCargar = new JButton("Leer archivo");
         this.btnDescifrar = new JButton("Descifrar");
         this.btnEncriptar = new JButton("Encriptar");
+        this.btnGuardar = new JButton("Guardar");
         this.btnLimpiarEntrada = new JButton("Limpiar");
         this.btnLimpiarSalida = new JButton("Limpiar");
 
@@ -59,10 +57,21 @@ class Gui extends JPanel implements ActionListener {
             txtEntrada.requestFocus();
         } else if (o.equals(btnLimpiarSalida)) { // BOTÓN LIMPIAR SALIDA
             txtSalida.setText("");
-        } else if (o.equals(btnCargarArchivo)) { // BOTÓN CARGAR ARCHIVO
-            if (archivoLectura.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+        } else if (o.equals(btnCargar)) { // BOTÓN CARGAR ARCHIVO
+            fileChooser.setApproveButtonText("Abrir");
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 try {
-                    cargarArchivo(archivoLectura.getSelectedFile());
+                    cargarArchivo(fileChooser.getSelectedFile());
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage(),
+                            "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        } else if (o.equals(btnGuardar)) { // BOTÓN GUARDAR EN ARCHIVO
+            fileChooser.setApproveButtonText("Guardar");
+            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+                try {
+                    guardarArchivo(fileChooser.getSelectedFile());
                 } catch (IOException e) {
                     JOptionPane.showMessageDialog(this, e.getMessage(),
                             "Error", JOptionPane.ERROR_MESSAGE);
@@ -76,9 +85,7 @@ class Gui extends JPanel implements ActionListener {
         StringBuilder sb = new StringBuilder();
         String linea;
 
-        while ((linea = br.readLine()) != null) {
-            sb.append(linea).append(System.lineSeparator());
-        }
+        while ((linea = br.readLine()) != null) sb.append(linea).append(System.lineSeparator());
         br.close();
 
         txtEntrada.setText(sb.toString());
@@ -135,23 +142,32 @@ class Gui extends JPanel implements ActionListener {
         scrollEntrada.setPreferredSize(dimTxt);
         scrollSalida.setPreferredSize(dimTxt);
 
-        btnCargarArchivo.addActionListener(this);
+        btnCargar.addActionListener(this);
+        btnGuardar.addActionListener(this);
         btnLimpiarEntrada.addActionListener(this);
         btnLimpiarSalida.addActionListener(this);
 
-        Dimension dimBotones = new Dimension(100, 30);
-        btnCargarArchivo.setPreferredSize(new Dimension(130, 30));
-        btnLimpiarEntrada.setPreferredSize(dimBotones);
-        btnLimpiarSalida.setPreferredSize(dimBotones);
+        Dimension dimBotonesPeques = new Dimension(100, 30);
+        Dimension dimBotonesGrandes = new Dimension(130, 30);
+        btnCargar.setPreferredSize(dimBotonesGrandes);
+        btnGuardar.setPreferredSize(dimBotonesGrandes);
+        btnLimpiarEntrada.setPreferredSize(dimBotonesPeques);
+        btnLimpiarSalida.setPreferredSize(dimBotonesPeques);
 
-        archivoLectura.setFileHidingEnabled(false);
+        fileChooser.setFileHidingEnabled(false);
 
         JPanel btnsEntradaPanel = new JPanel(new GridBagLayout());
         GridBagConstraints btnsPanelC = new GridBagConstraints();
         btnsPanelC.insets = new Insets(0, 10, 0, 10);
-        btnsEntradaPanel.add(btnCargarArchivo, btnsPanelC);
+        btnsEntradaPanel.add(btnCargar, btnsPanelC);
         btnsPanelC.gridx = 1;
         btnsEntradaPanel.add(btnLimpiarEntrada, btnsPanelC);
+
+        JPanel btnsSalidaPanel = new JPanel(new GridBagLayout());
+        btnsPanelC.gridx = 0;
+        btnsSalidaPanel.add(btnGuardar, btnsPanelC);
+        btnsPanelC.gridx = 1;
+        btnsSalidaPanel.add(btnLimpiarSalida, btnsPanelC);
 
         GridBagConstraints txtC = new GridBagConstraints();
         txtC.insets = new Insets(0, 5, 0, 5);
@@ -170,7 +186,20 @@ class Gui extends JPanel implements ActionListener {
         txtC.insets = new Insets(10, 0, 10, 0);
         panelTextsAreas.add(btnsEntradaPanel, txtC);
         txtC.gridx = 1;
-        panelTextsAreas.add(btnLimpiarSalida, txtC);
+        panelTextsAreas.add(btnsSalidaPanel, txtC);
+    }
+
+    private void guardarArchivo(File archivo) throws IOException {
+        if (archivo.isFile()) {
+            int respuesta = JOptionPane.showConfirmDialog(this, "Estás a punto de sobreescribir" +
+                    " el archivo. ¿Quieres continuar?", "Aviso", JOptionPane.OK_CANCEL_OPTION);
+            if (respuesta != JOptionPane.YES_OPTION) return;
+        }
+        BufferedWriter bw = new BufferedWriter(new FileWriter(archivo));
+        bw.write(txtSalida.getText());
+        bw.close();
+
+        JOptionPane.showMessageDialog(this, "Archivo guardado con éxito");
     }
 
     private void juntarPartes() {
