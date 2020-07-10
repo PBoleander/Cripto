@@ -107,13 +107,12 @@ class Gui extends JPanel implements ActionListener {
 
     private void configurarPass() {
         JLabel passLabel = new JLabel("Contraseña:");
-        txtPassword.setPreferredSize(new Dimension(200, 20));
+        txtPassword.setPreferredSize(new Dimension(230, 20));
         GridBagConstraints txtPassC = new GridBagConstraints();
 
-        txtPassC.weightx = 1.0;
         txtPassC.gridwidth = GridBagConstraints.REMAINDER;
         txtPassC.gridx = 1;
-        txtPassC.insets = new Insets(0, 20, 0, 0);
+        txtPassC.insets = new Insets(0, 15, 0, 0);
 
         panelPass.add(passLabel, new GridBagConstraints());
         panelPass.add(txtPassword, txtPassC);
@@ -146,9 +145,8 @@ class Gui extends JPanel implements ActionListener {
         btnLimpiarSalida.addActionListener(this);
 
         Dimension dimBotonesPeques = new Dimension(100, 30);
-        Dimension dimBotonesGrandes = new Dimension(130, 30);
-        btnCargar.setPreferredSize(dimBotonesGrandes);
-        btnGuardar.setPreferredSize(dimBotonesGrandes);
+        btnCargar.setPreferredSize(new Dimension(130, 30));
+        btnGuardar.setPreferredSize(dimBotonesPeques);
         btnLimpiarEntrada.setPreferredSize(dimBotonesPeques);
         btnLimpiarSalida.setPreferredSize(dimBotonesPeques);
 
@@ -202,7 +200,7 @@ class Gui extends JPanel implements ActionListener {
 
     private void juntarPartes() {
         GridBagConstraints constraints = new GridBagConstraints();
-        constraints.insets = new Insets(5, 15, 5, 15);
+        constraints.insets = new Insets(5, 10, 5, 10);
         this.add(panelPass, constraints);
         constraints.gridx = 1;
         this.add(panelBotones, constraints);
