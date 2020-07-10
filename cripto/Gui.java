@@ -58,7 +58,6 @@ class Gui extends JPanel implements ActionListener {
         } else if (o.equals(btnLimpiarSalida)) { // BOTÓN LIMPIAR SALIDA
             txtSalida.setText("");
         } else if (o.equals(btnCargar)) { // BOTÓN CARGAR ARCHIVO
-            fileChooser.setApproveButtonText("Abrir");
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 try {
                     cargarArchivo(fileChooser.getSelectedFile());
@@ -68,8 +67,7 @@ class Gui extends JPanel implements ActionListener {
                 }
             }
         } else if (o.equals(btnGuardar)) { // BOTÓN GUARDAR EN ARCHIVO
-            fileChooser.setApproveButtonText("Guardar");
-            if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            if (fileChooser.showSaveDialog(this) == JFileChooser.APPROVE_OPTION) {
                 try {
                     guardarArchivo(fileChooser.getSelectedFile());
                 } catch (IOException e) {
