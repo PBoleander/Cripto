@@ -11,7 +11,8 @@ class Gui extends JPanel implements ActionListener {
     private static final long serialVersionUID = 1L;
 
     private final Criptador criptador;
-    private final JButton btnCargar, btnDescifrar, btnEncriptar, btnGuardar, btnLimpiarEntrada, btnLimpiarSalida;
+    private final JButton btnCargar, btnCopiar, btnDescifrar, btnEncriptar, btnGuardar, btnLimpiarEntrada,
+            btnLimpiarSalida;
     private final JFileChooser fileChooser;
     private final JPanel panelBotones, panelPass, panelTextsAreas;
     private final JPasswordField txtPassword;
@@ -23,6 +24,7 @@ class Gui extends JPanel implements ActionListener {
         this.fileChooser = new JFileChooser();
 
         this.btnCargar = new JButton("Leer archivo");
+        this.btnCopiar = new JButton("<");
         this.btnDescifrar = new JButton("Descifrar");
         this.btnEncriptar = new JButton("Encriptar");
         this.btnGuardar = new JButton("Guardar");
@@ -52,6 +54,10 @@ class Gui extends JPanel implements ActionListener {
         } else if (o.equals(btnEncriptar)) { // BOTÓN ENCRIPTAR
             criptador.setClave(txtPassword.getPassword());
             txtSalida.setText(criptador.encriptar(txtEntrada.getText()));
+        } else if (o.equals(btnCopiar)) { // BOTÓN COPIAR (<)
+            txtEntrada.setText(txtSalida.getText());
+            txtSalida.setText("");
+            txtEntrada.requestFocus();
         } else if (o.equals(btnLimpiarEntrada)) { // BOTÓN LIMPIAR ENTRADA
             txtEntrada.setText("");
             txtEntrada.requestFocus();
@@ -119,7 +125,7 @@ class Gui extends JPanel implements ActionListener {
     }
 
     private void configurarTextsAreas() {
-        JLabel labelEntrada = new JLabel("Entrada de texto:");
+        JLabel labelEntrada = new JLabel("Texto de entrada:");
         JLabel labelSalida = new JLabel("Texto de salida:");
 
         txtSalida.setEditable(false);
@@ -140,6 +146,7 @@ class Gui extends JPanel implements ActionListener {
         scrollSalida.setPreferredSize(dimTxt);
 
         btnCargar.addActionListener(this);
+        btnCopiar.addActionListener(this);
         btnGuardar.addActionListener(this);
         btnLimpiarEntrada.addActionListener(this);
         btnLimpiarSalida.addActionListener(this);
@@ -165,23 +172,27 @@ class Gui extends JPanel implements ActionListener {
         btnsPanelC.gridx = 1;
         btnsSalidaPanel.add(btnLimpiarSalida, btnsPanelC);
 
+        btnCopiar.setPreferredSize(new Dimension(20, 300));
+        btnCopiar.setMargin(new Insets(0, 0, 0, 0));
+
         GridBagConstraints txtC = new GridBagConstraints();
-        txtC.insets = new Insets(0, 5, 0, 5);
 
         panelTextsAreas.add(labelEntrada, txtC);
-        txtC.gridx = 1;
+        txtC.gridx = 2;
         panelTextsAreas.add(labelSalida, txtC);
 
         txtC.gridx = 0;
         txtC.gridy = 1;
         panelTextsAreas.add(scrollEntrada, txtC);
         txtC.gridx = 1;
+        panelTextsAreas.add(btnCopiar, txtC);
+        txtC.gridx = 2;
         panelTextsAreas.add(scrollSalida, txtC);
         txtC.gridx = 0;
         txtC.gridy = 2;
         txtC.insets = new Insets(10, 0, 10, 0);
         panelTextsAreas.add(btnsEntradaPanel, txtC);
-        txtC.gridx = 1;
+        txtC.gridx = 2;
         panelTextsAreas.add(btnsSalidaPanel, txtC);
     }
 
