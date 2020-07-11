@@ -95,7 +95,7 @@ class Gui extends JPanel implements ActionListener {
         txtEntrada.setText(sb.toString());
     }
 
-    private void configurarBotones() {
+    private void configurarBotones() { // Botones descifrar y encriptar
         btnDescifrar.addActionListener(this);
         btnEncriptar.addActionListener(this);
 
@@ -125,9 +125,11 @@ class Gui extends JPanel implements ActionListener {
     }
 
     private void configurarTextsAreas() {
+        // Labels
         JLabel labelEntrada = new JLabel("Texto de entrada:");
         JLabel labelSalida = new JLabel("Texto de salida:");
 
+        // Configuración de los textAreas
         txtSalida.setEditable(false);
 
         Font fuente = new Font(Font.MONOSPACED, Font.PLAIN, 13);
@@ -145,6 +147,7 @@ class Gui extends JPanel implements ActionListener {
         scrollEntrada.setPreferredSize(dimTxt);
         scrollSalida.setPreferredSize(dimTxt);
 
+        // Configuración de los botones (cargar, copiar, guardar y los dos limpiar)
         btnCargar.addActionListener(this);
         btnCopiar.addActionListener(this);
         btnGuardar.addActionListener(this);
@@ -153,12 +156,16 @@ class Gui extends JPanel implements ActionListener {
 
         Dimension dimBotonesPeques = new Dimension(100, 30);
         btnCargar.setPreferredSize(new Dimension(130, 30));
+        btnCopiar.setPreferredSize(new Dimension(20, 300));
+        btnCopiar.setMargin(new Insets(0, 0, 0, 0));
         btnGuardar.setPreferredSize(dimBotonesPeques);
         btnLimpiarEntrada.setPreferredSize(dimBotonesPeques);
         btnLimpiarSalida.setPreferredSize(dimBotonesPeques);
 
+        // Configuración fileChooser
         fileChooser.setFileHidingEnabled(false);
 
+        // Maquetación de los botones cargar y limpiar entrada
         JPanel btnsEntradaPanel = new JPanel(new GridBagLayout());
         GridBagConstraints btnsPanelC = new GridBagConstraints();
         btnsPanelC.insets = new Insets(0, 10, 0, 10);
@@ -166,17 +173,15 @@ class Gui extends JPanel implements ActionListener {
         btnsPanelC.gridx = 1;
         btnsEntradaPanel.add(btnLimpiarEntrada, btnsPanelC);
 
+        // Maquetación de los botones guardar y limpiar salida
         JPanel btnsSalidaPanel = new JPanel(new GridBagLayout());
         btnsPanelC.gridx = 0;
         btnsSalidaPanel.add(btnGuardar, btnsPanelC);
         btnsPanelC.gridx = 1;
         btnsSalidaPanel.add(btnLimpiarSalida, btnsPanelC);
 
-        btnCopiar.setPreferredSize(new Dimension(20, 300));
-        btnCopiar.setMargin(new Insets(0, 0, 0, 0));
-
+        // Maquetación de todo (juntar las partes que pertenecen al panelTextsAreas)
         GridBagConstraints txtC = new GridBagConstraints();
-
         panelTextsAreas.add(labelEntrada, txtC);
         txtC.gridx = 2;
         panelTextsAreas.add(labelSalida, txtC);
@@ -197,7 +202,7 @@ class Gui extends JPanel implements ActionListener {
     }
 
     private void guardarArchivo(File archivo) throws IOException {
-        if (archivo.isFile()) {
+        if (archivo.isFile()) { // El archivo ya existe y se está a punto de sobreescribir
             int respuesta = JOptionPane.showConfirmDialog(this, "Estás a punto de sobreescribir" +
                     " el archivo. ¿Quieres continuar?", "Aviso", JOptionPane.OK_CANCEL_OPTION);
             if (respuesta != JOptionPane.YES_OPTION) return;

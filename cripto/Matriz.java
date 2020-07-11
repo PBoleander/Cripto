@@ -34,8 +34,9 @@ class Matriz {
         return this.filas;
     }
 
+    // Devuelve el producto de la matriz (variable miembro) y la matriz pasada por parámetro
     protected Matriz producto(Matriz matriz) {
-        if (columnas != matriz.getFilas()) return null;
+        if (columnas != matriz.getFilas()) return null; // las matrices no se pueden multiplicar
 
         Matriz producto = new Matriz(filas, matriz.getColumnas());
 
@@ -52,6 +53,7 @@ class Matriz {
         return producto;
     }
 
+    // Devuelve la suma de todos los elementos de la matriz
     protected int sumaElementos() {
         int suma = 0;
         for (int i = 0; i < filas; i++) {

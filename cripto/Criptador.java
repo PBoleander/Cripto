@@ -5,7 +5,7 @@ class Criptador {
     private final String abc = ",;.·:-/¡!¿?\"()[]{}'@#$%&=+*^€ºª0123456789 aAáÁàÀbBcCdDeEéÉèÈfFgGhHiIíÍìÌïjJkKlLmMnN" +
             "ñÑoOóÓòÒpPqQrRsStTuUúÚùÙüvVwWxXyYzZçÇ";
 
-    private int[] hash;
+    private int[] hash; // array de int que se usará para encriptar/descifrar, se creará a partir de la contraseña
 
     Criptador() {
     }
@@ -67,10 +67,7 @@ class Criptador {
             String[] parrafos = texto.split(System.lineSeparator());
             StringBuilder sb = new StringBuilder();
 
-            for (String parrafo: parrafos) {
-                sb.append(descifrar(parrafo));
-                sb.append(System.lineSeparator());
-            }
+            for (String parrafo: parrafos) sb.append(descifrar(parrafo)).append(System.lineSeparator());
 
             return sb.toString();
         }
@@ -100,10 +97,7 @@ class Criptador {
             String[] parrafos = texto.split(System.lineSeparator());
             StringBuilder sb = new StringBuilder();
 
-            for (String parrafo: parrafos) {
-                sb.append(encriptar(parrafo));
-                sb.append(System.lineSeparator());
-            }
+            for (String parrafo: parrafos) sb.append(encriptar(parrafo)).append(System.lineSeparator());
 
             return sb.toString();
         }
@@ -147,9 +141,7 @@ class Criptador {
     // Devuelve la suma de los códigos ASCII de todos los caracteres del array pasado por parámetro
     private int sumaChars(char[] texto) {
         int suma = 0;
-        for (char c: texto) {
-            suma += c;
-        }
+        for (char c: texto) suma += c;
 
         return suma;
     }
