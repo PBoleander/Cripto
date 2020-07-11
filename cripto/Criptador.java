@@ -5,7 +5,7 @@ class Criptador {
     private final String abc = ",;.·:-/¡!¿?\"()[]{}'@#$%&=+*^€ºª0123456789 aAáÁàÀbBcCdDeEéÉèÈfFgGhHiIíÍìÌïjJkKlLmMnN" +
             "ñÑoOóÓòÒpPqQrRsStTuUúÚùÙüvVwWxXyYzZçÇ";
 
-    private String hash;
+    private int[] hash;
 
     Criptador() {
     }
@@ -13,11 +13,11 @@ class Criptador {
     // Convierte la clave en un string Hash (así puede ser lo largo que se quiera)
     protected void setClave(char[] clave) {
         /*
-        Si la clave es la cadena vacía, el hash será "0" para que no dé errores a la hora de dividir entre 0 en el
-        proceso de encriptado / descifrado
+        Si la clave es la cadena vacía, el hash se creará a partir del string "0" para que no dé errores a la hora de
+        dividir entre 0 en el proceso de encriptado / descifrado
          */
         if (clave.length == 0) {
-            hash = "0";
+            hash = stringToHash("0");
             return;
         }
 
@@ -57,7 +57,7 @@ class Criptador {
             }
         }
 
-        hash = sb.reverse().toString();
+        hash = stringToHash(sb.reverse().toString());
     }
 
     // Descifra el texto con la clave proporcionada al Criptador
@@ -78,11 +78,10 @@ class Criptador {
         int[] arrayEncriptado = textoToIntArray(texto); // array de posiciones en abc de los caracteres de texto
         int[] arrayDescifrado = new int[arrayEncriptado.length]; // array de posiciones en abc de los caracteres
         // descifrados
-        int[] arrayHash = hashToArray();
 
         int indice; // contendrá el valor de la posición en abc del carácter descifrado
         for (int i = 0; i < arrayEncriptado.length; i++) {
-            indice = arrayEncriptado[i] + arrayHash[i % arrayHash.length] - i * i; // fórmula para descifrar
+            indice = arrayEncriptado[i] + hash[i % hash.length] - i * i; // fórmula para descifrar
 
             // indice debe estar dentro de los límites de abc
             while (indice < 0) indice += abc.length();
@@ -111,11 +110,10 @@ class Criptador {
 
         int[] arrayDescifrado = textoToIntArray(texto); // array de posiciones en abc de los caracteres descifrados
         int[] arrayEncriptado = new int[arrayDescifrado.length]; // array de posiciones en abc de los caracteres de texto
-        int[] arrayHash = hashToArray();
 
         int indice; // contendrá el valor de la posición en abc del carácter encriptado
         for (int i = 0; i < arrayDescifrado.length; i++) {
-            indice = arrayDescifrado[i] - arrayHash[i % arrayHash.length] + i * i; // fórmula para encriptar
+            indice = arrayDescifrado[i] - hash[i % hash.length] + i * i; // fórmula para encriptar
 
             // indice debe estar dentro de los límites de abc
             while (indice < 0) indice += abc.length();
@@ -136,8 +134,8 @@ class Criptador {
         return texto.toString();
     }
 
-    // Pasa la variable miembro hash a un array formado por los enteros que representan sus caracteres
-    private int[] hashToArray() {
+    // Pasa un string a un array formado por los enteros que representan sus caracteres que será el hash
+    private int[] stringToHash(String hash) {
         char[] arrayChar = hash.toCharArray();
         int[] arrayInt = new int[arrayChar.length];
 
