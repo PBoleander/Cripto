@@ -116,9 +116,8 @@ class Gui extends JPanel implements ActionListener {
         txtPassword.setPreferredSize(new Dimension(230, 20));
         GridBagConstraints txtPassC = new GridBagConstraints();
 
-        txtPassC.gridwidth = GridBagConstraints.REMAINDER;
         txtPassC.gridx = 1;
-        txtPassC.insets = new Insets(0, 15, 0, 0);
+        txtPassC.insets = new Insets(0, 10, 0, 0);
 
         panelPass.add(passLabel, new GridBagConstraints());
         panelPass.add(txtPassword, txtPassC);
@@ -202,7 +201,7 @@ class Gui extends JPanel implements ActionListener {
     }
 
     private void guardarArchivo(File archivo) throws IOException {
-        if (archivo.isFile()) { // El archivo ya existe y se está a punto de sobreescribir
+        if (archivo.isFile()) { // El archivo ya existe y se está a punto de sobreescribirse
             int respuesta = JOptionPane.showConfirmDialog(this, "Estás a punto de sobreescribir" +
                     " el archivo. ¿Quieres continuar?", "Aviso", JOptionPane.OK_CANCEL_OPTION);
             if (respuesta != JOptionPane.YES_OPTION) return;
