@@ -5,8 +5,6 @@ import java.awt.*;
 
 class Main extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-
     Main() {
         super();
 

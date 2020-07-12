@@ -8,8 +8,6 @@ import java.io.*;
 
 class Gui extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 1L;
-
     private final Criptador criptador;
     private final JButton btnCargar, btnCopiar, btnDescifrar, btnEncriptar, btnGuardar, btnLimpiarEntrada,
             btnLimpiarSalida;
@@ -201,8 +199,8 @@ class Gui extends JPanel implements ActionListener {
     }
 
     private void guardarArchivo(File archivo) throws IOException {
-        if (archivo.isFile()) { // El archivo ya existe y se está a punto de sobreescribirse
-            int respuesta = JOptionPane.showConfirmDialog(this, "Estás a punto de sobreescribir" +
+        if (archivo.isFile()) { // El archivo ya existe y se está a punto de sobrescribir
+            int respuesta = JOptionPane.showConfirmDialog(this, "Estás a punto de sobrescribir" +
                     " el archivo. ¿Quieres continuar?", "Aviso", JOptionPane.OK_CANCEL_OPTION);
             if (respuesta != JOptionPane.YES_OPTION) return;
         }
